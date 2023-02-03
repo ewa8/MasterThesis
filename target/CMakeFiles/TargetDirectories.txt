@@ -1,0 +1,10 @@
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/dist.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/nestml_7572c325c24847f4afc90a8b52d50e81_module_module.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/package.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/package_source.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/edit_cache.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/rebuild_cache.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/list_install_components.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/install.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/install/local.dir
+/Users/ewarusiecka/Documents/University/DTU/Special_course/MSN/target/CMakeFiles/install/strip.dir

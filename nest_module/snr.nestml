@@ -1,0 +1,82 @@
+neuron snr:
+  state:
+    V_m mV = -65.0 mV
+    U_m real = 0.0
+    I pA = 0.0 pA # input current
+  end
+
+  equations:
+    kernel g_msn = exp(-t/tau_decay_msn)
+    kernel g_snr = exp(-t/tau_decay_snr)
+    kernel g_gpe = exp(-t/tau_decay_gpe)
+    kernel g_stn_ampa = exp(-t/tau_decay_stn_ampa)
+    kernel g_stn_nmda = exp(-t/tau_decay_stn_nmda)
+
+    inline I_syn_msn pA = convolve(g_msn, spikes_msn)
+    inline I_syn_snr pA = convolve(g_snr, spikes_snr)
+    inline I_syn_gpe pA = convolve(g_gpe, spikes_gpe)
+    inline I_syn_stn_ampa pA = convolve(g_stn_ampa, spikes_stn_ampa)
+    inline I_syn_stn_nmda pA = convolve(g_stn_nmda, spikes_stn_nmda)
+
+    inline I_msn pA = I_syn_msn * (E_rev_msn - V_m)
+    inline I_snr pA = I_syn_snr * (E_rev_snr - V_m)
+    inline I_gpe pA = I_syn_gpe * (E_rev_gpe - V_m)
+    inline I_stn_ampa pA = I_syn_stn_ampa * (E_rev_stn_ampa - V_m)
+    inline I_stn_nmda pA = I_syn_stn_nmda * (E_rev_stn_nmda - V_m)
+
+    inline I_syn pA = I_msn + I_snr + I_gpe + I_stn_ampa + I_stn_nmda
+
+    V_m' = (Kplus * (V_m - V_r) * (V_m - V_T)/mV - U_m*mV + ((I_e + I_syn)* GOhm))/ (C_m*(ms/pF))
+    U_m' = a * (b * (V_m - V_r) - U_m*mV)/(mV * ms)
+  end
+
+  parameters:
+    a real = 0.03
+    b real = -2.0
+    c mV = -50 mV
+    d real = 100
+    I_e pA = 0pA # constant external input current
+    V_th mV = 35mV #V peak
+    V_min mV = -inf * mV
+    Kplus real = 0.7
+    V_r mV = -60.0 mV #resting potential
+    V_T mV = -40.0 mV #threshold potential
+    C_m pF = 100.0 pF # membrane capacitance
+    tau_decay_msn ms = 2.0 ms
+    tau_decay_snr ms = 2.0 ms
+    E_rev_msn real = 0.0
+    E_rev_snr real = 0.0
+    E_rev_gpe real = -80.0
+    tau_decay_gpe ms = 2.1 ms
+    E_rev_stn_ampa real = 0.0
+    tau_decay_stn_ampa ms = 2.0 ms
+    E_rev_stn_nmda real = 0.0
+    tau_decay_stn_nmda ms = 100.0 ms
+
+  end
+  input:
+    spikes_msn mV <- spike
+    spikes_snr mV <- spike
+    spikes_gpe mV <-spike
+    spikes_stn_ampa mV <-spike
+    spikes_stn_nmda mV <-spike
+    I_stim pA     <- continuous
+  end
+
+  output: spike
+
+  update:
+    integrate_odes()
+    # Add synaptic current
+
+    # lower bound of membrane potential
+    V_m = (V_m < V_min)?V_min:V_m
+
+    # threshold crossing
+    if V_m >= V_th:
+      V_m = c
+      U_m += d
+      emit_spike()
+    end
+  end
+end
